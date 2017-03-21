@@ -182,6 +182,13 @@ function createOperation(operator, leftTokens, rightTokens){
 		operation.unusedLeftTokens = leftTokens.slice(0, leftTokens.length-1);
 	}
 	
+	if (operator.greed === 'both') {
+		// left is the last token of the left tokens array
+		operation.left = leftTokens;
+		// right is all the tokens of the right tokens array
+		operation.right = rightTokens;
+	}
+	
 	return operation;
 }
 
@@ -197,7 +204,7 @@ function addOrderInformationToToken(operatorToken){
 	}
 	// Tokens with left greediness
 	else if (operatorToken.val === 'of') {
-		operatorToken.greed = 'left';
+		operatorToken.greed = 'both';
 	}
 	// Tokens with normal greediness
 	else {
