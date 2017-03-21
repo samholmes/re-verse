@@ -15,9 +15,9 @@ In early phase of development. Compiler needs finishing. Language needs document
 
 # TODO
 
-## Modified Tokenizer
-
-- Create definition that relate on token to another in some way.
-- Have only one pass through the character stream.
-- As characters are tokenized, check for definitions that use them.
-- Pass any tokens to the atomizer along with the found definitions.
+- Modified Tokenizer
+	- Create definition that relate on token to another in some way.
+	- Have only one pass through the character stream.
+	- As characters are tokenized, check for definitions that use them.
+	- Pass any tokens to the atomizer along with the found definitions.
+- Finish Generator
