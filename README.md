@@ -2,6 +2,8 @@
 
 Reverse is a FP language for all Wizards alike.
 
+https://medium.com/@sam_holmes/language-of-the-wizards-a38ac891ebf#.hk00se1y5
+
 ## The Goal
 
 A human and computer language both written and spoken with a relatively flat learning curve. 
