@@ -129,15 +129,15 @@ function processTokensIntoOperation(tokens, lastUsedOperator){
 		}
 	}
 	
-	if (Array.isArray(unusedRightTokens) && unusedRightTokens.length) {
-		unusedRightTokens.unshift(operation);
-		
-		operation = processTokensIntoOperation(unusedRightTokens, operation.operator);
-	}
 	if (Array.isArray(unusedLeftTokens) && unusedLeftTokens.length) {
 		unusedLeftTokens.push(operation);
 		
 		operation = processTokensIntoOperation(unusedLeftTokens, operation.operator);
+	}
+	if (Array.isArray(unusedRightTokens) && unusedRightTokens.length) {
+		unusedRightTokens.unshift(operation);
+		
+		operation = processTokensIntoOperation(unusedRightTokens, operation.operator);
 	}
 	
 	return operation;
