@@ -1,6 +1,6 @@
 {
   "name": "re-verse",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "The language of the Wizards.",
   "main": "index.js",
   "scripts": {
