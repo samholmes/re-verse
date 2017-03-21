@@ -4,7 +4,7 @@
   "description": "The language of the Wizards.",
   "main": "index.js",
   "scripts": {
-  	"start": "nodemon index.js",
+    "start": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -12,5 +12,8 @@
     "url": "https://github.com/samholmes/re-verse.git"
   },
   "author": "Samuel Holmes",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "json-stringify-safe": "^5.0.1"
+  }
 }

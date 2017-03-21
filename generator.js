@@ -71,9 +71,9 @@ function generateOperation(operatorToken, leftToken, rightToken){
 	var right = generateExpression(rightToken);
 	
 	// Debug operator
-	var operator = function(left, right){
-		return ['(', left, ' ', operatorToken.val, ' ', right, ')'].join('');
-	}
+	// var operator = function(left, right){
+	// 	return ['(', left, ' ', operatorToken.val, ' ', right, ')'].join('');
+	// }
 	
 	return operator(left, right);
 }
