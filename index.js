@@ -27,15 +27,6 @@ fs.readFile('test.rv', (err, file) => {
 	
 	var compiledFile = compile(reverseCode);
 	
-	try {
-		var json = stringify(compiledFile, null, 2);
-		
-		console.log(json);
-	}
-	catch(e) {
-		
-	}
-	
 	fs.writeFile('output.js', compiledFile, (err) => {
 		if (err) return error(err);
 	})
