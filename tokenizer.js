@@ -80,7 +80,7 @@ var definitionsList = [
 		},
 		{
 			name: 'letter',
-			regex: /[a-zA-Z]/,
+			regex: /[a-zA-Z\-]/,
 			definition: useRegexAsDefinition,
 		},
 		{
