@@ -219,7 +219,7 @@ function addOrderInformationToToken(operatorToken){
 	if (operatorToken.val === 'is' || operatorToken.val === 'of') {
 		operatorToken.order = 2;
 	}
-	else if (operatorToken.val === 'as') {
+	else if (operatorToken.val === 'as' || operatorToken.val === 'in') {
 		operatorToken.order = 1;
 	}
 	
