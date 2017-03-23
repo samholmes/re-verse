@@ -1,3 +1,6 @@
+var fs = require('fs');
+var UglifyJS = require('uglifyjs');
+
 var beautifier = {
 	newline: '\n'
 }
@@ -5,7 +8,7 @@ var beautifier = {
 module.exports = function generator(tree){
 	var statements = tree.statements;
 	
-	var output = "";
+	var output = runtimeCode();
 	
 	statements.forEach(function(statement){
 		output += generateStatement(statement);
@@ -44,9 +47,8 @@ function generateExpression(expression){
 	}
 }
 
-
 function generateIdentifier(token){
-	return token.val;
+	return identify(token.val);
 }
 
 function generateString(token){
@@ -57,11 +59,21 @@ function generateString(token){
 		var delimiter = '"';
 	}
 	
-	return [delimiter, token.val.replace(new RegExp(delimiter, 'g'), "\\"+delimiter), delimiter].join('')
+	var output = [delimiter, token.val.replace(new RegExp(delimiter, 'g'), "\\"+delimiter), delimiter].join('');
+	
+	// Escape newlines
+	output = output.replace(/\n/g, '\\\n');
+	
+	// Make it a thing
+	output = thingify(null, output);
+	
+	return output;
 }
 
 function generateNumber(token){
-	return token.val;
+	var output = token.val;
+	output = thingify(null, output);
+	return output;
 }
 
 function generateOperation(operatorToken, leftToken, rightToken){
@@ -80,31 +92,54 @@ function generateOperation(operatorToken, leftToken, rightToken){
 
 var operators = {
 	'is': function(left, right){
-		return [left, ' = ', '(', right, ')'].join('');
+		return ['define(', left, ',', right, ', scope)'].join('');
 	},
 	'of': function(left, right){
-		return ['(', right, ') => { return ', left, '; }'].join('');
+		return thingify(null, ['((input) => { var scope = createScope(scope); destructure(', right, ', input, scope); return ', left, '; })'].join(''));
 	},
 	'to': function(left, right){
-		return [right, '(', structure(left), ')'].join('');
+		if (left === null) {
+			left = thingify(null, null);
+		}
+		return ['invoke(', right, ', ', left, ')'].join('');
 	},
 	'in': function(left, right){
-		return [right, '.', left].join('');
+		return ['inside(', left, ', ', right, ')'].join('');
 	},
 	'as': function(left, right){
-		return ['{', right, ':', left, '}'].join('');
+		console.log(left, right)
+		return ['as(', left, ', ', right, ')'].join(''); //[right, ':', left].join('');
 	},
 	'and': function(left, right){
-		console.log(left, right)
-		return [left, right];
+		return ['and(', left, ',', right, ')'].join('');
 	},
 }
 
+function thingify(identifier, value, key){
+	identifier = identifier || 'null';
+	
+	if (key) {
+		var keys = "{" + key + ":" + value + "}";
+		var items = [];
+	}
+	else {
+		var keys = "{}";
+		var items = [value];
+	}
+	return ['THING(', identifier, ', [', items.join(), '],', keys, ')'].join('');
+}
 
-function structure(operand){
-	var struct = {};
+function identify(identifier){
+	return ['scope("', identifier, '")'].join('')
+}
+
+
+function runtimeCode(){
+	var code = fs.readFileSync('./runtime.js', 'utf8');
 	
+	code = UglifyJS.minify(code, {fromString: true}).code;
 	
+	code += "\n// END OF RUNTIME\n\n";
 	
-	return operand;
+	return code;
 }
