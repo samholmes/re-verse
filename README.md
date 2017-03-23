@@ -21,3 +21,5 @@ In early phase of development. Compiler needs finishing. Language needs document
 	- As characters are tokenized, check for definitions that use them.
 	- Pass any tokens to the atomizer along with the found definitions.
 - Finish Generator
+	- Define native functions
+	- Create a separate native.js file for native functions
