@@ -1,18 +1,3 @@
-/*
-function Thing(items, keys){
-	this.items = items || [];
-	this.keys = keys || {};
-}
-
-Thing.prototype.fold = function(){
-	return this.value;
-}
-
-Thing.prototype.merge = function(thing){
-	return new Thing(thing.items, thing.keys);
-}
-*/
-
 function error(message){
 	throw new Error("Runtime Error: "+message);
 }
