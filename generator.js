@@ -92,7 +92,7 @@ function generateOperation(operatorToken, leftToken, rightToken){
 
 var operators = {
 	'is': function(left, right){
-		return ['define(', left, ',', right, ', scope)'].join('');
+		return [left, '.is(', right, ', scope)'].join('');
 	},
 	'of': function(left, right){
 		return thingify(null, ['((input) => { var scope = createScope(scope); destructure(', right, ', input, scope); return ', left, '; })'].join(''));
@@ -101,17 +101,16 @@ var operators = {
 		if (left === null) {
 			left = thingify(null, null);
 		}
-		return ['invoke(', right, ', ', left, ')'].join('');
+		return [left, '.to(', right, ')'].join('');
 	},
 	'in': function(left, right){
-		return ['inside(', left, ', ', right, ')'].join('');
+		return [left, '.in(', right, ')'].join('');
 	},
 	'as': function(left, right){
-		console.log(left, right)
-		return ['as(', left, ', ', right, ')'].join(''); //[right, ':', left].join('');
+		return [left, '.as(', right, ')'].join(''); //[right, ':', left].join('');
 	},
 	'and': function(left, right){
-		return ['and(', left, ',', right, ')'].join('');
+		return [left, '.and(', right, ')'].join('');
 	},
 }
 
@@ -126,7 +125,7 @@ function thingify(identifier, value, key){
 		var keys = "{}";
 		var items = [value];
 	}
-	return ['THING(', identifier, ', [', items.join(), '],', keys, ')'].join('');
+	return ['(new Thing(', identifier, ', [', items.join(), '],', keys, '))'].join('');
 }
 
 function identify(identifier){

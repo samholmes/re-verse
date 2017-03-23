@@ -6,7 +6,7 @@ function createScope(parentScope){
 		if (thing) {
 			// Create a new thing from thing with an identifier.
 			// Assign that new thing to the scope.
-			return scope[identifier] = THING(identifier, thing.items, thing.keys);
+			return scope[identifier] = new Thing(identifier, thing.items, thing.keys);
 		}
 		// Retrieval
 		else {
@@ -21,7 +21,7 @@ function createScope(parentScope){
 				}
 				// If not found in parent, then create an undefined thing
 				else {
-					thing = THING(identifier, [], {});
+					thing = new Thing(identifier, [], {});
 				}
 			}
 			
@@ -34,11 +34,8 @@ function createScope(parentScope){
 
 var scope = createScope();
 
-function define(thing, value, withinScope){
-	return withinScope(thing.identifier, value);
-}
 
-function THING(identifiers, items, keys){
+function Thing(identifiers, items, keys){
 	if (!Array.isArray(identifiers)) {
 		identifiers = [identifiers];
 	}
@@ -46,47 +43,54 @@ function THING(identifiers, items, keys){
 	var identifier = identifiers[identifiers.length-1];
 	
 	// thing structure
-	var thing = {
-		items: items || [],
-		keys: keys || {},
-		identifiers: identifiers,
-		identifier: identifier
-	};
-	
-	return thing;
+	this.items = items || [];
+	this.keys = keys || {};
+	this.identifiers = identifiers;
+	this.identifier = identifier;
 }
 
-function and(leftThing, rightThing){
+Thing.prototype.is = function(value, scope){
+	return scope(this.identifier, value);
+}
+
+Thing.prototype.and = function(thing){
 	// Creates a new thing from left and right thing.
 	// The identifiers of the new thing is an array of the two identifiers
 	// The items are concatenated
 	// The keys are merged
-	return THING([leftThing.identifier, rightThing.identifier], leftThing.items.concat(rightThing.items), Object.assign(leftThing.keys, rightThing.keys));
+	var newThing = new Thing([this.identifier, thing.identifier]);
+	
+	newThing.items = this.items.concat(thing.items);
+	newThing.keys = Object.assign(this.keys, thing.keys);
+	
+	return newThing;
 }
 
-function as(leftThing, rightThing){
-	// Create a new thing where the key is the identifier of the right thing
-	// And the value is the left thing
-	var keys = {};
-	keys[rightThing.identifier] = leftThing;
-	return THING(leftThing.identifier, [], keys);
+Thing.prototype.as = function(thing){
+	// Create a new thing with the same identifier
+	var newThing = new Thing(this.identifier);
+	
+	// Set the newThing's key with the same name as the thing's identifier to this thing
+	newThing.keys[thing.identifier] = this;
+	
+	return newThing;
 }
 
-function inside(leftThing, rightThing){
+Thing.prototype.in = function(thing){
 	// Return the thing from the right things keys using the left thing's identifier
-	var thing = rightThing.keys[leftThing.identifier];
+	var newThing = thing.keys[this.identifier];
 	
-	if (!thing)
-		thing = THING(null, []);
+	if (!newThing)
+		newThing = new Thing(null, []);
 	
-	return thing;
+	return newThing;
 }
 
-function invoke(thing, inputThing){
+Thing.prototype.to = function(thing){
 	var f = thing.items[0];
 	
 	if (typeof f === 'function') {
-		return f(inputThing);
+		return f(this);
 	}
 	else {
 		error(thing.identifier + " is not a function.");
@@ -114,7 +118,7 @@ function destructure(thing, inputThing, scope){
 		}
 		
 		// Create new thing from value
-		var valueThing = THING(identifier, [value]);
+		var valueThing = new Thing(identifier, [value]);
 		
 		// Define identifier as the valueThing within scope
 		scope(identifier, valueThing);
@@ -127,10 +131,10 @@ function error(message){
 
 // NATIVE FUNCTIONS
 
-scope('log', THING(null, [function (inputThing) {
+scope('log', new Thing(null, [function (inputThing) {
 	console.log(inputThing);
 }]));
 
-scope('print', THING(null, [function (inputThing) {
+scope('print', new Thing(null, [function (inputThing) {
 	console.log(inputThing.items);
 }]));
