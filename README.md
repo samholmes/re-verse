@@ -15,11 +15,10 @@ In early phase of development. Compiler needs finishing. Language needs document
 
 # TODO
 
-- Modified Tokenizer
-	- Create definition that relate on token to another in some way.
+- Runtime
+	- Define all native functions (math and string functions, etc.)
+- Tokenizer
+	- Create definitions that relate one token to another in some way.
 	- Have only one pass through the character stream.
 	- As characters are tokenized, check for definitions that use them.
 	- Pass any tokens to the atomizer along with the found definitions.
-- Finish Generator
-	- Define native functions
-	- Create a separate native.js file for native functions
