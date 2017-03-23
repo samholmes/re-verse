@@ -125,16 +125,10 @@ function destructure(thing, inputThing, scope){
 	})
 }
 
+function lambda(f) {
+	return new Thing(null, [f]);
+}
+
 function error(message){
 	throw new Error("Runtime Error: "+message);
 }
-
-// NATIVE FUNCTIONS
-
-scope('log', new Thing(null, [function (inputThing) {
-	console.log(inputThing);
-}]));
-
-scope('print', new Thing(null, [function (inputThing) {
-	console.log(inputThing.items);
-}]));

@@ -8,7 +8,7 @@ var beautifier = {
 module.exports = function generator(tree){
 	var statements = tree.statements;
 	
-	var output = runtimeCode();
+	var output = runtimeCode() + nativeCode();
 	
 	statements.forEach(function(statement){
 		output += generateStatement(statement);
@@ -139,6 +139,16 @@ function runtimeCode(){
 	code = UglifyJS.minify(code, {fromString: true}).code;
 	
 	code += "\n// END OF RUNTIME\n\n";
+	
+	return code;
+}
+
+function nativeCode(){
+	var code = fs.readFileSync('./native.js', 'utf8');
+	
+	code = UglifyJS.minify(code, {fromString: true}).code;
+	
+	code += "\n// END OF NATIVE\n\n";
 	
 	return code;
 }
