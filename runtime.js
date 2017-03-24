@@ -49,10 +49,12 @@ function Thing(identifiers, items, keys){
 	this.identifier = identifier;
 }
 
+// Definition
 Thing.prototype.is = function(value, scope){
 	return scope(this.identifier, value);
 }
 
+// Composition
 Thing.prototype.and = function(thing){
 	// Creates a new thing from left and right thing.
 	// The identifiers of the new thing is an array of the two identifiers
@@ -66,6 +68,7 @@ Thing.prototype.and = function(thing){
 	return newThing;
 }
 
+// Container Storage
 Thing.prototype.as = function(thing){
 	// Create a new thing with the same identifier
 	var newThing = new Thing(this.identifier);
@@ -76,6 +79,7 @@ Thing.prototype.as = function(thing){
 	return newThing;
 }
 
+// Container Access
 Thing.prototype.in = function(thing){
 	// Return the thing from the right things keys using the left thing's identifier
 	var newThing = thing.keys[this.identifier];
@@ -86,6 +90,7 @@ Thing.prototype.in = function(thing){
 	return newThing;
 }
 
+// Invocation
 Thing.prototype.to = function(thing){
 	var f = thing.items[0];
 	
@@ -97,6 +102,7 @@ Thing.prototype.to = function(thing){
 	}
 }
 
+// Destructuring (Taking the elements and items of a container object and defining them within a scope)
 function destructure(thing, inputThing, scope){
 	thing.identifiers.forEach(function(identifier, index){
 		// Value will be...
