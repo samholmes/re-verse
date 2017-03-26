@@ -95,7 +95,7 @@ var operators = {
 		return [left, '.is(', right, ', scope)'].join('');
 	},
 	'of': function(left, right){
-		return thingify(null, ['((input) => { var scope = createScope(scope); destructure(', right, ', input, scope); return ', left, '; })'].join(''));
+		return lambdafy(thingify(), '((scope) => ' + right + ')', '((scope) => ' + left + ')');
 	},
 	'to': function(left, right){
 		if (left === null) {
@@ -107,7 +107,7 @@ var operators = {
 		return [left, '.in(', right, ')'].join('');
 	},
 	'as': function(left, right){
-		return [left, '.as(', right, ')'].join(''); //[right, ':', left].join('');
+		return [left, '.as(', right, ')'].join('');
 	},
 	'and': function(left, right){
 		return [left, '.and(', right, ')'].join('');
@@ -126,6 +126,12 @@ function thingify(identifier, value, key){
 		var items = [value];
 	}
 	return ['(new Thing(', identifier, ', [', items.join(), '],', keys, '))'].join('');
+}
+
+function lambdafy(thingString, signature, body){
+	thingString += ['.lambda(', signature, ',', body, ')'].join('')
+	
+	return thingString;
 }
 
 function identify(identifier){

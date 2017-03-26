@@ -4,9 +4,16 @@ function createScope(parentScope){
 	var scopeFunction = function(identifier, thing){
 		// Assignment
 		if (thing) {
-			// Create a new thing from thing with an identifier.
+			// Create a new thing from thing argument with it's identifier as the identifier argument.
+			var newThing = new Thing(identifier, thing.items, thing.keys);
+			
+			// Set the definitionScope to the scope in which the new thing is defined
+			newThing.signature = thing.signature;
+			newThing.body = thing.body;
+			newThing.definitionScope = scopeFunction;
+			
 			// Assign that new thing to the scope.
-			return scope[identifier] = new Thing(identifier, thing.items, thing.keys);
+			return scope[identifier] = newThing;
 		}
 		// Retrieval
 		else {
@@ -92,9 +99,27 @@ Thing.prototype.in = function(thing){
 
 // Invocation
 Thing.prototype.to = function(thing){
-	var f = thing.items[0];
-	
-	if (typeof f === 'function') {
+	if (typeof thing.body === 'function') {
+		inputThing = this;
+		
+		// Create a new scope for the invocation.
+		// This new scope will have the function's definition scope as the parent scope.
+		var functionScope = createScope(thing.definitionScope);
+		
+		// Signature handling
+		if (typeof thing.signature === 'function') {
+			// Get the parameter thing
+			var parameterThing = thing.signature(thing.definitionScope);
+			
+			if (parameterThing) {
+				// Destructure Parameters into function's scope
+				destructure(parameterThing, inputThing, functionScope);
+			}
+		}
+		
+		// Invoke body with the new scope
+		return thing.body(functionScope); 
+				
 		return f(this);
 	}
 	else {
@@ -102,7 +127,14 @@ Thing.prototype.to = function(thing){
 	}
 }
 
-// Destructuring (Taking the elements and items of a container object and defining them within a scope)
+Thing.prototype.lambda = function(signature, body){
+	this.signature = signature;
+	this.body = body;
+	
+	return this;
+}
+
+// Destructuring (Defining the identifiers of a thing as the values of an inputThing within a specific scope)
 function destructure(thing, inputThing, scope){
 	thing.identifiers.forEach(function(identifier, index){
 		// Value will be...
@@ -129,10 +161,6 @@ function destructure(thing, inputThing, scope){
 		// Define identifier as the valueThing within scope
 		scope(identifier, valueThing);
 	})
-}
-
-function lambda(f) {
-	return new Thing(null, [f]);
 }
 
 function error(message){
