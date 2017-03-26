@@ -117,6 +117,9 @@ Thing.prototype.to = function(thing){
 			}
 		}
 		
+		// Define an input thing as the inputThing
+		functionScope('input', inputThing);
+		
 		// Invoke body with the new scope
 		return thing.body(functionScope); 
 				

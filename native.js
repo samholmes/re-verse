@@ -41,8 +41,8 @@
 		};
 	}
 	
-	scope('log', createLambdaThing(creaetSignature(['x']), function(scope){
-		console.log(scope('x'));
+	scope('log', createLambdaThing(null, function(scope){
+		console.log(scope('input'));
 	}));
 
 	scope('print', convertToLambdaThing(function(x){
