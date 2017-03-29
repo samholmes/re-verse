@@ -88,11 +88,16 @@ Thing.prototype.as = function(thing){
 
 // Container Access
 Thing.prototype.in = function(thing){
-	// Return the thing from the right things keys using the left thing's identifier
-	var newThing = thing.keys[this.identifier];
-	
-	if (!newThing)
-		newThing = new Thing(null, []);
+	if (this.identifier) {
+		// Return the thing from the right things keys using the left thing's identifier
+		var newThing = thing.keys[this.identifier];
+	}
+	else if (typeof this.items[0] === 'number') {
+		var newThing = new Thing(null, [thing.items[this.items[0]]]);
+	}
+	else {
+		var newThing = new Thing(null, []);
+	}
 	
 	return newThing;
 }
